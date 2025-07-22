@@ -2,7 +2,7 @@ pipeline{
     agent any
 
     environment {
-        SONAR_PROJECT_KEY = 'MULTI-AGENT-LLMOps'
+        SONAR_PROJECT_KEY = 'LLMOPS'
 		SONAR_SCANNER_HOME = tool 'sonarqube'
         // AWS_REGION = 'us-west-2'
         // ECR_REPO = 'my-repo'
