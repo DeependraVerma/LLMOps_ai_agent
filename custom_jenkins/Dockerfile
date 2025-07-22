@@ -17,7 +17,8 @@ RUN apt-get update -y && \
     apt-get install -y docker-ce docker-ce-cli containerd.io && \
     apt-get clean
 
-# Add jenkins user to docker group
+# Add jenkins to docker group (optional in this case)
 RUN getent group docker || groupadd docker && usermod -aG docker jenkins
 
-USER jenkins
+# 👇 REMOVE or COMMENT OUT this line
+# USER jenkins
