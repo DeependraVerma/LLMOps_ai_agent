@@ -4,9 +4,9 @@ pipeline{
     environment {
         SONAR_PROJECT_KEY = 'LLMOPS'
 		SONAR_SCANNER_HOME = tool 'sonarqube'
-        // AWS_REGION = 'us-west-2'
-        // ECR_REPO = 'my-repo'
-        // IMAGE_TAG = 'latest'
+        AWS_REGION = 'us-west-2'
+        ECR_REPO = 'my-repo'
+        IMAGE_TAG = 'latest'
 	}
 
     stages{
@@ -35,23 +35,23 @@ pipeline{
 			}
 		}
 
-    // stage('Build and Push Docker Image to ECR') {
-    //         steps {
-    //             withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS-tokens']]) {
-    //                 script {
-    //                     def accountId = sh(script: "aws sts get-caller-identity --query Account --output text", returnStdout: true).trim()
-    //                     def ecrUrl = "${accountId}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ECR_REPO}"
+    stage('Build and Push Docker Image to ECR') {
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS-tokens']]) {
+                    script {
+                        def accountId = sh(script: "aws sts get-caller-identity --query Account --output text", returnStdout: true).trim()
+                        def ecrUrl = "${accountId}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ECR_REPO}"
 
-    //                     sh """
-    //                     aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ecrUrl}
-    //                     docker build -t ${env.ECR_REPO}:${IMAGE_TAG} .
-    //                     docker tag ${env.ECR_REPO}:${IMAGE_TAG} ${ecrUrl}:${IMAGE_TAG}
-    //                     docker push ${ecrUrl}:${IMAGE_TAG}
-    //                     """
-    //                 }
-    //             }
-    //         }
-    //     }
+                        sh """
+                        aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ecrUrl}
+                        docker build -t ${env.ECR_REPO}:${IMAGE_TAG} .
+                        docker tag ${env.ECR_REPO}:${IMAGE_TAG} ${ecrUrl}:${IMAGE_TAG}
+                        docker push ${ecrUrl}:${IMAGE_TAG}
+                        """
+                    }
+                }
+            }
+        }
 
     //     stage('Deploy to ECS Fargate') {
     // steps {
